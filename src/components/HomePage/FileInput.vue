@@ -16,12 +16,11 @@
 
 <script setup lang="ts">
 import { ref } from "vue";
-import { useRouter } from "vue-router";
-import { addFileAPI } from "../../apis/files";
+import {useFileStore} from '../../stores/fileStore'
 
 const filename = ref("");
 const content = ref("");
-const router = useRouter();
+const fs = useFileStore();
 
 const updateContent = () => {
   const file = (event.target as HTMLInputElement).files[0];
@@ -35,17 +34,7 @@ const updateContent = () => {
 
 const onSubmit = (e) => {
   e.preventDefault();
-  //fetch api and add to the file info to the state. -> use pina
-  try {
-    const data = {
-      filename: filename.value,
-      content: content.value,
-    };
-    addFileAPI(data);
-    router.push("/login");
-  } catch (err) {
-    console.log(err);
-  }
+  fs.addFile({filename: filename.value, content: content.value});
 };
 </script>
 
