@@ -28,7 +28,7 @@
     {
       "id": "b0a7",
       "filename": "test",
-      "content": "def adder (a, b){\r\n\treturn a+b\r\n}\r\n\r\nprint(adder(1, 2))"
+      "content": "def adder (a, b){\n\treturn a+b\n}\n\nprint(adder(1, 3))"
     }
   ]
 }

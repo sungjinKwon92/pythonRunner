@@ -17,24 +17,35 @@
 <script setup lang="ts">
 import { ref } from "vue";
 import {useFileStore} from '../../stores/fileStore'
+import {useUserStore} from "@/stores/userStore";
 
 const filename = ref("");
 const content = ref("");
 const fs = useFileStore();
+const us = useUserStore();
+const isLoggedIn = Object.keys(us.me).length > 0;
 
-const updateContent = () => {
-  const file = (event.target as HTMLInputElement).files[0];
+const updateContent = (e:Event) => {
+  const input = e.target as HTMLInputElement;
+  if (!input.files || input.files.length === 0) {
+    return;
+  }
+  
+  const file = input.files[0];
   const reader = new FileReader();
-  reader.onload = (e) => {
-    filename.value = file.name.split(".")[0];
-    content.value = e.target.result as string;
+  reader.onload = (e:ProgressEvent<FileReader>) => {
+    if (typeof e.target?.result === 'string') {
+      filename.value = file.name.split('.')[0];
+      content.value = e.target.result;
+    }
   };
   reader.readAsText(file);
 };
 
-const onSubmit = (e) => {
+const onSubmit = async (e:Event) => {
   e.preventDefault();
-  fs.addFile({filename: filename.value, content: content.value});
+  const data = {FileName: filename.value, Content: content.value, UserId: us.me?.id};
+  await fs.addFile(data);
 };
 </script>
 

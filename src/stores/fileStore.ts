@@ -1,5 +1,5 @@
 import {defineStore} from 'pinia';
-import {loadFilesAPI, addFileAPI, loadFileAPI} from '../apis/files'
+import {addFileAPI} from '../apis/files'
 import {File} from '../interfaces'
 
 export const useFileStore = defineStore('store',{
@@ -10,24 +10,21 @@ export const useFileStore = defineStore('store',{
     getters:{
         getFiles(): File[]{
             return this.files;
-        }
+        },
+        getFilesByUser: (state) => (userId: number): File[] => {
+            return state.files.filter((file) => file.UserId === userId); // Assuming the property is userId in your File interface
+        },
     },
     actions:{
         //action에 대한 정의...
-        loadFiles(){
-            loadFilesAPI().then((files)=>{
-                this.files = files;
-            }).catch((err)=>console.error(err));
-        },
-        addFile(file: File){
-            addFileAPI(file).then((file)=>{
-                this.files.push(file);
-            }).catch((err)=>console.error(err));
-        },
-        loadFile(id:string){
-            loadFileAPI(id).then((file)=>{
-                this.file = file;
-            }).catch((err)=>console.error(err));
+        async addFile(file: File){
+            try{
+                const res = await addFileAPI(file);
+                this.files.push(res);
+            }catch(err){
+                console.error(err);
+            }
         }
     }
+
 });

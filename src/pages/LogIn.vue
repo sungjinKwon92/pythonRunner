@@ -1,15 +1,14 @@
 <template>
 	<AppLayout>
 		<div>
-			<header>
-				<h2>Login</h2>
+			<header @click="router.push('/')">
+				<h2>PythonRunner</h2>
 			</header>
 			<section>
-			
-				<input type="text" placeholder="username" v-model="email"/>
+				<input type="text" placeholder="username" v-model="username"/>
 				<input type="password" placeholder="password" v-model="password" />
-				<button @click="onClick">Login</button>
-				<span>SignUp</span>
+				<button @click="onClickLoginButton">Login</button>
+				<router-link to="/signup">회원가입 하러 가기</router-link>
 			</section>
 		</div>
 	</AppLayout>
@@ -17,14 +16,22 @@
 
 <script setup lang="ts">
 import {ref} from 'vue';
+import {useRouter} from 'vue-router';
 
+import { useUserStore } from '@/stores/userStore';
 import AppLayout from '../components/AppLayout.vue';
 
-const email = ref("");
+const username = ref("");
 const password = ref("");
+const us = useUserStore();
+const router = useRouter();
 
-const onClick = () => {
-	console.log({email, password});
+const onClickLoginButton = async () => {
+	const data = {Username: username.value, Password:password.value};
+	await us.logIn(data);
+	if(Object.keys(us.me) && !us.isStoreLoading){
+		router.push('/');
+	}
 }
 
 </script>

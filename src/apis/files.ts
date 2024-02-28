@@ -1,19 +1,9 @@
 import axios from "axios";
+import {File} from "../interfaces";
 
-axios.defaults.baseURL = "http://localhost:3000";
+axios.defaults.baseURL = "http://localhost:5106/api";
+axios.defaults.withCredentials = true;
 
-export const loadFilesAPI = () => {
-  return axios.get("/file").then((res) => res.data);
+export const addFileAPI = (data: File) => {
+  return axios.post("/file/addfile", data).then((res) => res.data);
 };
-
-export const loadFileAPI = (id:string) => {
-  return axios.get(`/file/${id}`).then((res) => res.data);
-}
-
-export const addFileAPI = (data: { filename: string; content: string }) => {
-  return axios.post("/file", data).then((res) => res.data);
-};
-
-// export const updateFileAPI = (data: { filename: string; content: string }) => {
-//   return axios.put("/file", data).then((res) => res.data);
-// };

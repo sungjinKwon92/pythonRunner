@@ -1,5 +1,10 @@
 export interface File {
-    id?:string;
-    filename: string;
-    content: string;
+    FileName: string;
+    Content: string; 
+    UserId: number;
+}
+
+export interface User{
+    Username: string;
+    Password: string;
 }

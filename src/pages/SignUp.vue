@@ -5,12 +5,9 @@
 				<h2>SignUp</h2>
 			</header>
 			<section>
-			
-				<input type="text" placeholder="username" v-model="email"/>
-                <input type="text" placeholder="nickname" v-model="nickname" />
-
+				<input type="text" placeholder="username" v-model="username" />
 				<input type="password" placeholder="password" v-model="password" />
-				<button @click="onClick">Login</button>
+				<button @click="onSignUp">회원가입</button>
 			</section>
 		</div>
 	</AppLayout>
@@ -18,15 +15,23 @@
 
 <script setup lang="ts">
 import {ref} from 'vue';
+import {useRouter} from 'vue-router';
 
 import AppLayout from '../components/AppLayout.vue';
+import {useUserStore} from '../stores/userStore';
 
-const email = ref("");
-const nickname = ref("");
+const username = ref("");
 const password = ref("");
+const us = useUserStore();
+const router = useRouter();
 
-const onClick = () => {
-	console.log({email, nickname, password});
+const onSignUp = async () => {
+	const data = {Username: username.value, Password:password.value};
+	await us.signUp(data);
+	if(!us.isStoreLoading){
+		alert('회원가입이 완료되었습니다. 로그인 해주세요.');
+		router.push('/login');
+	}
 }
 
 </script>

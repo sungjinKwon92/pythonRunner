@@ -15,8 +15,13 @@ const props = defineProps<{
 }>();
 
 const onClickButton = () =>{
-    fs.loadFile(props.data.id);
+    if(props.data && props.data.id){
+        fs.loadFile(props.data.id);
+    }else {
+        console.error("파일이 없습니다.");
+    }
 }
+
 
 </script>
 

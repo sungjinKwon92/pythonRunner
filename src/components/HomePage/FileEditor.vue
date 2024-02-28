@@ -1,9 +1,10 @@
 <template>
   <div class="editor-container">
     <section class="editor-section">
-      <input type="text" :readonly="!isEditing"/>
-      <textarea :readonly="!isEditing" v-mode="fileContent"></textarea>
-      <button @click="isEditing = !isEditing">{{!isEditing?"수정하기":"저장하기" }}</button>
+      <input type="text" v-model="file.filename"/>
+      <textarea v-model="file.content"></textarea>
+      <p>{{filename}}</p>
+      <button @click="onClickEditButton">수정하기</button>
     </section>
     <section class="reader-section">
       <textarea readonly></textarea>
@@ -13,22 +14,23 @@
 </template> 
 
 <script setup>
-import { ref, computed } from "vue";
-
+import { ref, computed, onMounted, watch } from "vue";
 import {useFileStore} from '../../stores/fileStore';
 
-const isEditing = ref(false);
 const fs = useFileStore();
+const file = ref({})
 
-const fileContent = computed({
-  get:()=>fs.file?.content || "",
-  set:(value) =>{
-    if(fs.file){
-      fs.file.content = value;
-    }
-  },
-})
+const fileData = computed(()=>fs.file || "");
 
+watch([fileData],()=>{
+  file.value = fileData.value;
+},{immediate: true});
+
+const onClickEditButton = () => {
+  const testData = {id: file.value.id, content:file.value};
+  fs.updateFile(testData);
+  console.log(testData);
+};
 </script>
 
 <style scoped>
